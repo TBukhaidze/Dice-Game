@@ -31,7 +31,7 @@ class ProbabilityTable {
 
       console.log(row.join("\t"));
     }
-    console.log(); // Пустая строка в конце
+    console.log();
   }
 }
 

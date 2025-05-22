@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const { DiceSetParser } = require("./classes/DiceSetParser");
 const { Game } = require("./classes/Game");
 const { ProbabilityTable } = require("./classes/ProbabilityTable");

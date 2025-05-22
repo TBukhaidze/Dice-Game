@@ -3,10 +3,9 @@ const crypto = require("crypto");
 class FairRandomGenerator {
   constructor(range) {
     this.range = range;
-    this.secretKey = crypto.randomBytes(32).toString("hex"); // 256-bit key
+    this.secretKey = crypto.randomBytes(32).toString("hex"); 
     this.computerValue = FairRandomGenerator.generateUniform(range);
 
-    // 👉 создаём HMAC честным способом через Node.js crypto
     this.hmac = crypto
       .createHmac("sha3-256", this.secretKey)
       .update(String(this.computerValue))

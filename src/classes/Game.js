@@ -77,10 +77,19 @@ class Game {
 
   async computerRoll(mod) {
     const fairGen = new FairRandomGenerator(mod);
-    console.log(`Computer has selected a value from 0 to ${mod - 1}.`);
-    console.log(`HMAC: ${fairGen.getHmac()}`);
+    console.log(
+      `I selected a random value in the range 0..${
+        mod - 1
+      } (HMAC=${fairGen.getHmac()}).`
+    );
+    console.log(`Add your number modulo ${mod}.`);
+    for (let i = 0; i < mod; i++) {
+      console.log(`${i} - ${i}`);
+    }
+    console.log("X - exit");
+    console.log("? - help");
 
-    let input = await this.askQuestion(`Enter your number (0 to ${mod - 1}): `);
+    let input = await this.askQuestion("Your selection: ");
 
     while (
       input.toLowerCase() !== "x" &&
@@ -106,10 +115,19 @@ class Game {
 
   async userRoll(mod) {
     const fairGen = new FairRandomGenerator(mod);
-    console.log(`You must now select a value from 0 to ${mod - 1}.`);
-    console.log(`HMAC: ${fairGen.getHmac()}`);
+    console.log(
+      `I selected a random value in the range 0..${
+        mod - 1
+      } (HMAC=${fairGen.getHmac()}).`
+    );
+    console.log(`Add your number modulo ${mod}.`);
+    for (let i = 0; i < mod; i++) {
+      console.log(`${i} - ${i}`);
+    }
+    console.log("X - exit");
+    console.log("? - help");
 
-    let input = await this.askQuestion(`Enter your number (0 to ${mod - 1}): `);
+    let input = await this.askQuestion("Your selection: ");
 
     while (
       input.toLowerCase() !== "x" &&

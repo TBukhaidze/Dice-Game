@@ -8,6 +8,60 @@ class Game {
       input: process.stdin,
       output: process.stdout,
     });
+
+    const input = process.argv.slice(2).join(" ");
+    if (input === "?") {
+      this.printHelpTable();
+    }
+  }
+
+  calculateProbabilities() {
+    const n = this.diceSet.length;
+    const results = Array.from({ length: n }, () => Array(n).fill(null));
+
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (i === j) continue;
+
+        let wins = 0;
+        const total =
+          this.diceSet[i].values.length * this.diceSet[j].values.length;
+
+        for (const a of this.diceSet[i].values) {
+          for (const b of this.diceSet[j].values) {
+            if (a > b) wins++;
+          }
+        }
+
+        const probability = ((wins / total) * 100).toFixed(1);
+        results[i][j] = probability;
+      }
+    }
+
+    return results;
+  }
+
+  printHelpTable() {
+    const probs = this.calculateProbabilities();
+    const n = this.diceSet.length;
+
+    console.log("Win probability table (% chance A beats B):");
+    process.stdout.write("      ");
+    for (let j = 0; j < n; j++) {
+      process.stdout.write(` B${j}   `);
+    }
+    console.log();
+
+    for (let i = 0; i < n; i++) {
+      process.stdout.write(`A${i} | `);
+      for (let j = 0; j < n; j++) {
+        if (i === j) process.stdout.write("  -   ");
+        else process.stdout.write(`${probs[i][j]}% `);
+      }
+      console.log();
+    }
+
+    process.exit(0);
   }
 
   async askQuestion(query) {
@@ -89,28 +143,38 @@ class Game {
     console.log("X - exit");
     console.log("? - help");
 
-    let input = await this.askQuestion("Your selection: ");
+    while (true) {
+      let input = await this.askQuestion("Your selection: ");
+      input = input.toLowerCase();
 
-    while (
-      input.toLowerCase() !== "x" &&
-      (!/^\d+$/.test(input) || parseInt(input) < 0 || parseInt(input) >= mod)
-    ) {
-      input = await this.askQuestion("Invalid number. Try again: ");
+      if (input === "x") {
+        this.readline.close();
+        process.exit(0);
+      } else if (input === "?") {
+        console.log("\nHelp:");
+        console.log(
+          `- You and I each secretly choose a number from 0 to ${mod - 1}`
+        );
+        console.log("- Then we add them together and take result modulo", mod);
+        console.log("- The resulting index determines the face of the die.\n");
+        continue;
+      } else if (
+        /^\d+$/.test(input) &&
+        parseInt(input) >= 0 &&
+        parseInt(input) < mod
+      ) {
+        const userValue = parseInt(input);
+        const compValue = fairGen.getComputerValue();
+
+        console.log(`Computer value was: ${compValue}`);
+        console.log(`Key: ${fairGen.getKey()}`);
+
+        const resultIndex = (userValue + compValue) % mod;
+        return resultIndex;
+      } else {
+        console.log("Invalid input. Try again.");
+      }
     }
-
-    if (input.toLowerCase() === "x") {
-      this.readline.close();
-      process.exit(0);
-    }
-
-    const userValue = parseInt(input);
-    const compValue = fairGen.getComputerValue();
-
-    console.log(`Computer value was: ${compValue}`);
-    console.log(`Key: ${fairGen.getKey()}`);
-
-    const resultIndex = (userValue + compValue) % mod;
-    return resultIndex;
   }
 
   async userRoll(mod) {
@@ -127,28 +191,38 @@ class Game {
     console.log("X - exit");
     console.log("? - help");
 
-    let input = await this.askQuestion("Your selection: ");
+    while (true) {
+      let input = await this.askQuestion("Your selection: ");
+      input = input.toLowerCase();
 
-    while (
-      input.toLowerCase() !== "x" &&
-      (!/^\d+$/.test(input) || parseInt(input) < 0 || parseInt(input) >= mod)
-    ) {
-      input = await this.askQuestion("Invalid number. Try again: ");
+      if (input === "x") {
+        this.readline.close();
+        process.exit(0);
+      } else if (input === "?") {
+        console.log("\nHelp:");
+        console.log(
+          `- You and I each secretly choose a number from 0 to ${mod - 1}`
+        );
+        console.log("- Then we add them together and take result modulo", mod);
+        console.log("- The resulting index determines the face of the die.\n");
+        continue;
+      } else if (
+        /^\d+$/.test(input) &&
+        parseInt(input) >= 0 &&
+        parseInt(input) < mod
+      ) {
+        const userValue = parseInt(input);
+        const compValue = fairGen.getComputerValue();
+
+        console.log(`Computer value was: ${compValue}`);
+        console.log(`Key: ${fairGen.getKey()}`);
+
+        const resultIndex = (userValue + compValue) % mod;
+        return resultIndex;
+      } else {
+        console.log("Invalid input. Try again.");
+      }
     }
-
-    if (input.toLowerCase() === "x") {
-      this.readline.close();
-      process.exit(0);
-    }
-
-    const userValue = parseInt(input);
-    const compValue = fairGen.getComputerValue();
-
-    console.log(`Computer value was: ${compValue}`);
-    console.log(`Key: ${fairGen.getKey()}`);
-
-    const resultIndex = (userValue + compValue) % mod;
-    return resultIndex;
   }
 
   async play() {

@@ -1,6 +1,6 @@
-const { DiceSetParser } = require("./classes/DiceSetParser");
-const { Game } = require("./classes/Game");
-const { ProbabilityTable } = require("./classes/ProbabilityTable");
+const { DiceSetParser } = require("./src/classes/DiceSetParser");
+const { Game } = require("./src/classes/Game");
+const { ProbabilityTable } = require("./src/classes/ProbabilityTable");
 
 try {
   const args = process.argv.slice(2);

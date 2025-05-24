@@ -2,24 +2,18 @@ const crypto = require("crypto");
 
 class FairRandomGenerator {
   constructor(range) {
+    if (typeof range !== "number" || range < 1 || !Number.isInteger(range)) {
+      throw new Error("Invalid range: must be a positive integer.");
+    }
+
     this.range = range;
-    this.secretKey = crypto.randomBytes(32).toString("hex"); 
-    this.computerValue = FairRandomGenerator.generateUniform(range);
+    this.secretKey = crypto.randomBytes(32).toString("hex");
+    this.computerValue = crypto.randomInt(range);
 
     this.hmac = crypto
       .createHmac("sha3-256", this.secretKey)
       .update(String(this.computerValue))
       .digest("hex");
-  }
-
-  static generateUniform(range) {
-    const max = 256;
-    const randByte = () => crypto.randomBytes(1)[0];
-    let val;
-    do {
-      val = randByte();
-    } while (val >= max - (max % range));
-    return val % range;
   }
 
   getHmac() {
